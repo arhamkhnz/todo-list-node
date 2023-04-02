@@ -57,27 +57,11 @@ router.post('/updateStatus', aeh(async function (req, res) {
     if (!DataExists || DataExists.length == 0) {
       return res.status(403).error("Todo do not exists!")
     }
-    let ChildTodos = await Todo.find({ parentId: id })
-    if(ChildTodos.length == 0){
       let update = await Todo.updateOne({ _id: id }, { status })
       return res.status(200).json({
         success: true,
         data: 'Updated Successfully'
       })
-    }
-    if(ChildTodos.length !== 0){
-      const filterData = ChildTodos.filter((ele) => ele._doc.status !== 'Completed');
-      console.log(filterData)
-      if(filterData.length > 0){
-        return res.status(403).error("Child Todos Are Not Completed!")
-      } else if (filterData.length == 0){
-        let update = await Todo.updateOne({ _id: id }, { status })
-        return res.status(200).json({
-          success: true,
-          data: 'Updated Successfully'
-        })
-      }
-    }
   }
   catch (error) {
     console.log(error)
